@@ -82,15 +82,7 @@ To further personalize the model, 30 samples of each command word were recorded 
 #### **Challenges and Solutions**
 During fine-tuning, challenges such as overfitting to the new data and maintaining generalization to other speakers were encountered. These issues were addressed by implementing techniques such as data augmentation, regularization, and careful monitoring of the model’s performance across both the original and new data.
 
-### 7. **Results**
-The fine-tuned model showed significant improvements in recognizing my voice, with the following results:
 
-- **Overall Accuracy**: XX%
-- **Precision**: YY%
-- **Recall**: ZZ%
-- **F1-Score**: WW%
-
-These results demonstrate the model's effectiveness in adapting to a new voice while maintaining strong performance across the original dataset.
 
 ### 8. **Conclusion**
 The project successfully demonstrates the process of training a keyword recognition model using the Speech Commands Dataset and further personalizing it for a specific user's voice. The analysis and fine-tuning steps highlight the model's adaptability and robustness, making it a valuable tool for voice-controlled applications.
