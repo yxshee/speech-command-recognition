@@ -1,0 +1,2 @@
+
+This [Custom Dataset](https://drive.google.com/drive/folders/1kAuKUZF1qZFbNUM1SjHRAA8Gx1Ain0Lj?usp=sharing) is a collection of one-second audio files containing single spoken English words by the developer. This dataset is designed to train simple machine learning models for keyword recognition, containing audio files. The audio files are organized into folders based on the spoken word, which enables easy access for training, validation, and testing.
