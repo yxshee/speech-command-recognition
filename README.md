@@ -125,12 +125,12 @@ For more information on CNNs in audio processing:
 
 #### **Accuracy & Loss**
 
-The model was trained for 30 epochs, and the accuracy on the test set was evaluated. Below are some key metrics:
+The model was trained for 5 epochs, and the accuracy on the test set was evaluated. Below are some key metrics:
 
-- **Training Accuracy**: 96.5%
-- **Validation Accuracy**: 94.2%
-- **Test Accuracy**: 92.8%
-- **Loss on Test Set**: 0.18
+- **Training Accuracy**: 94.95%
+- **Validation Accuracy**: 86.40%
+- **Test Accuracy**: 86%
+- **Loss on Test Set**: 0.1649
 
 #### **Confusion Matrix**
 
