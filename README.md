@@ -133,7 +133,8 @@ The model was trained for 5 epochs, and the accuracy on the test set was evaluat
 - **Training Accuracy**: 94.95%
 - **Validation Accuracy**: 85.65%
 - **Test Accuracy**: 86%
-- **Loss on Test Set**: 0.1649
+- **Loss on Test Set**: 0.6290
+
 
 <img width="928" alt="image" src="https://github.com/user-attachments/assets/d6ac0460-4390-4c4e-a472-bf93ce2e1e67" />
 
