@@ -29,7 +29,7 @@ The app will display the waveform and spectrogram of the uploaded audio along wi
 @st.cache_resource
 def load_model():
     """Load the pre-trained TensorFlow model."""
-    model = tf.keras.models.load_model('speech_recognition_model.keras')
+    model = tf.keras.models.load_model('wavmodel.keras')
     return model
 
 @st.cache_data
