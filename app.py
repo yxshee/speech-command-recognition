@@ -201,8 +201,7 @@ def main():
         
         # Plot and display spectrogram
         st.markdown("#### Spectrogram")
-        # Convert spectrogram to dB for visualization
-        spectrogram_db = librosa.amplitude_to_db(np.abs(librosa.stft(waveform, n_fft=255, hop_length=128)), ref=np.max)
+        spectrogram_db = spectrogram[..., 0]
         fig_spectrogram = plot_spectrogram(spectrogram_db)
         st.pyplot(fig_spectrogram)
 
