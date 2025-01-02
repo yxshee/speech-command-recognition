@@ -7,7 +7,7 @@ The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_command
 ## Keyword Recognition Using the Speech Commands Dataset
 
 ### 1. **Introduction**
-The project involves building a keyword recognition system using the [Speech Commands Dataset (Version 2)](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset provides 35 distinct words spoken by 2,618 different speakers. This report details the methods and technologies used, including preprocessing steps, neural network training, and the resulting performance metrics.
+The project involves building a keyword recognition system using the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset provides 35 distinct words spoken by 2,618 different speakers. This report details the methods and technologies used, including preprocessing steps, neural network training, and the resulting performance metrics.
 
 The main objectives of this project include:
 - Training a model capable of recognizing command words from short audio clips.
