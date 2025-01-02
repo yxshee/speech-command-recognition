@@ -143,7 +143,14 @@ The model was trained for 5 epochs, and the accuracy on the test set was evaluat
 
 The confusion matrix provides insights into which command words are most often confused with others. For example, “No” and “Go” were occasionally misclassified due to their similar pronunciations.
 
-<img width="649" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" />
+<p float="center">
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/e9ddae1d-6829-4070-a573-c4734749a74d" >
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" >
+
+
+
+</p>
 
 
 #### **Visualizing the Training Progress**:
@@ -189,3 +196,4 @@ Future improvements could involve experimenting with more advanced architectures
 - Detailed guide on keyword spotting: [Link](https://arxiv.org/pdf/1804.03209.pdf)
 
 ---
+
