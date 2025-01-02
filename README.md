@@ -4,7 +4,7 @@
 
 # Speech Recognition Project 
 
-The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of one-second audio files containing single spoken English words. This dataset is designed to train simple machine learning models for keyword recognition, containing 105,829 audio files. The audio files are organized into folders based on the spoken word, which enables easy access for training, validation, and testing.
+[Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of one-second audio files containing single spoken English words. This dataset is designed to train simple machine learning models for keyword recognition, containing 105,829 audio files. The audio files are organized into folders based on the spoken word, which enables easy access for training, validation, and testing.
 
 ## Keyword Recognition Using the Speech Commands Dataset
 
