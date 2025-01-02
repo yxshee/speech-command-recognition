@@ -1,6 +1,8 @@
----
+ <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2MzemxpaDUxdmtyMHN1ZzA5aG5xd2c0MHA1eHg0a2lncDN3MzB5cCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/NEbFcZ9u8KXmyuQgXP/giphy.gif">
+ 
+ ---
 
-# Speech Recognition Project Report
+# Speech Recognition Project 
 
 The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of one-second audio files containing single spoken English words. This dataset is designed to train simple machine learning models for keyword recognition, containing 105,829 audio files. The audio files are organized into folders based on the spoken word, which enables easy access for training, validation, and testing.
 
@@ -128,13 +130,21 @@ For more information on CNNs in audio processing:
 The model was trained for 5 epochs, and the accuracy on the test set was evaluated. Below are some key metrics:
 
 - **Training Accuracy**: 94.95%
-- **Validation Accuracy**: 86.40%
+- **Validation Accuracy**: 85.65%
 - **Test Accuracy**: 86%
 - **Loss on Test Set**: 0.1649
+
+<img width="928" alt="image" src="https://github.com/user-attachments/assets/d6ac0460-4390-4c4e-a472-bf93ce2e1e67" />
+
+
+  
 
 #### **Confusion Matrix**
 
 The confusion matrix provides insights into which command words are most often confused with others. For example, “No” and “Go” were occasionally misclassified due to their similar pronunciations.
+
+<img width="649" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" />
+
 
 #### **Visualizing the Training Progress**:
 
@@ -156,6 +166,9 @@ plt.legend()
 plt.title('Loss over epochs')
 plt.show()
 ```
+
+<img width="535" alt="image" src="https://github.com/user-attachments/assets/1a6af54d-c860-45f5-a4ab-f9d5048acd91" />
+
 
 ### 6. **Recording and Fine-Tuning**
 
