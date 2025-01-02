@@ -135,10 +135,8 @@ The model was trained for 5 epochs, and the accuracy on the test set was evaluat
 - **Loss on Test Set**: 0.6290
 
 
-<img width="928" alt="image" src="https://github.com/user-attachments/assets/d6ac0460-4390-4c4e-a472-bf93ce2e1e67" />
+![Result](https://github.com/user-attachments/assets/0295705f-cba7-44a6-806f-0a7d32cb06f6)
 
-
-  
 
 #### **Confusion Matrix**
 
