@@ -1,7 +1,7 @@
 <img width="396" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2MzemxpaDUxdmtyMHN1ZzA5aG5xd2c0MHA1eHg0a2lncDN3MzB5cCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/NEbFcZ9u8KXmyuQgXP/giphy.gif">
-<img src="https://media.giphy.com/media/u2YuLndYDUZaEjZpNZ/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
-<img src="https://media.giphy.com/media/uNAwKsulLBkwRXCOqb/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
-<img src="https://media.giphy.com/media/Qw4X3FwLj6EgczeQOuk/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img width="396"  src="https://media.giphy.com/media/u2YuLndYDUZaEjZpNZ/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img width="396"  src="https://media.giphy.com/media/uNAwKsulLBkwRXCOqb/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img  width="396" src="https://media.giphy.com/media/Qw4X3FwLj6EgczeQOuk/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">
 
  
 # Speech Recognition Project 
