@@ -113,6 +113,8 @@ input_shape = (64, 64, 1)
 model = create_cnn_model(input_shape)
 model.summary()
 ```
+<img width="1397" alt="image" src="https://github.com/user-attachments/assets/a595225f-4574-4bb4-8bfc-2fd524a48efb" />
+
 
 ### **Training Parameters**
 - **Optimizer**: Adam.
