@@ -86,8 +86,8 @@ Tools for preprocessing audio datasets:
 
 The chosen model is a **Convolutional Neural Network (CNN)**, which is well-suited for processing spectrograms of the speech data. CNNs can capture spatial patterns in audio, which helps the model distinguish between different command words.
 
+![image](https://github.com/user-attachments/assets/0ac6f7f0-b644-43b4-81fb-59afec7c1462)
 
-<img width="535" alt="image" src="https://github.com/user-attachments/assets/1a6af54d-c860-45f5-a4ab-f9d5048acd91" />
 
 ```python
 from tensorflow.keras.models import Sequential
