@@ -33,7 +33,7 @@ The dataset includes recordings from speakers of various ages, genders, and acce
 The dataset uses a consistent hashing mechanism to partition the data, ensuring that data splits remain the same across different projects.
 
 #### **Key Dataset Links**:
-- Speech Commands Dataset (v2): [Download](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz)
+- Speech Commands Dataset v2 : [Download](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz)
 - Paper: [arXiv](https://arxiv.org/abs/1804.03209)
 
 ### 3. **Preprocessing the Dataset**
