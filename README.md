@@ -1,6 +1,4 @@
 
-
-
 <p float="left">
 
 <img width="190"  height="190"  src="https://media.giphy.com/media/9Q5fSHyPKfrr2/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
@@ -15,93 +13,83 @@
 
 </p>
 
- 
-# Speech Recognition Project 
+# Speech Command Recognition Project
 
-[Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of one-second audio files containing single spoken English words. This dataset is designed to train simple machine learning models for keyword recognition, containing 105,829 audio files. The audio files are organized into folders based on the spoken word, which enables easy access for training, validation, and testing.
+## **Overview**
+This project focuses on building a robust keyword recognition system using the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset consists of one-second audio files containing spoken English words, enabling the training of machine learning models for real-time keyword detection. The system aims to:
 
-## Keyword Recognition Using the Speech Commands Dataset
+- Accurately recognize command words from short audio clips.
+- Perform robustly in noisy environments.
+- Be customizable with additional user-specific data for fine-tuning.
 
-### 1. **Introduction**
-The project involves building a keyword recognition system using the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset provides 35 distinct words spoken by 2,618 different speakers. This report details the methods and technologies used, including preprocessing steps, neural network training, and the resulting performance metrics.
+---
 
-The main objectives of this project include:
-- Training a model capable of recognizing command words from short audio clips.
-- Ensuring robust performance in noisy environments.
-- Personalizing the model with fine-tuning for specific users.
+## **Dataset Description**
 
-### 2. **Dataset Description**
+The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of 105,829 audio samples, each containing a single spoken English word. The dataset is organized into 35 categories, including:
 
-The dataset, provided by Google, consists of 35 words commonly used in voice-controlled systems, including:
-- **Core Commands**: Yes, No, Up, Down, Left, Right, On, Off, Stop, Go
-- **Auxiliary Words**: Cat, Dog, Bird, Tree
-- **Noise**: Background noise samples such as white noise, pink noise, running water, etc.
+- **Core Commands**: Yes, No, Up, Down, Left, Right, On, Off, Stop, Go.
+- **Auxiliary Words**: Cat, Dog, Bird, Tree.
+- **Noise Samples**: Background noise (white noise, pink noise, running water, etc.).
 
-The dataset includes recordings from speakers of various ages, genders, and accents. This diversity ensures that models trained on this data can generalize across different user demographics.
+### **Key Features of the Dataset**:
+- **Diversity**: Contains recordings from speakers with varied ages, genders, and accents.
+- **Partitioning**:
+  - **Training Data**: 80% of the dataset.
+  - **Validation Data**: 10%.
+  - **Test Data**: 10%.
 
-#### **Dataset Structure**
-- **Training Data**: 80% of the data
-- **Validation Data**: 10% of the data
-- **Test Data**: 10% of the data
+---
 
-The dataset uses a consistent hashing mechanism to partition the data, ensuring that data splits remain the same across different projects.
+## **Preprocessing**
 
-#### **Key Dataset Links**:
-- Speech Commands Dataset v2 : [Download](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz)
-- Paper: [arXiv](https://arxiv.org/abs/1804.03209)
+To prepare the audio data for machine learning, several preprocessing steps are applied:
 
-### 3. **Preprocessing the Dataset**
+1. **Audio Normalization**:
+   Ensures uniform loudness across recordings.
 
-Before feeding the audio data into the neural network, several preprocessing steps are essential:
-- **Audio Normalization**: Ensures uniform loudness across different recordings.
-- **Spectrogram Conversion**: Transforms the one-second `.wav` files into a Mel-spectrogram for easier analysis by convolutional neural networks (CNNs).
-- **Noise Augmentation**: Background noise samples are mixed with clean speech recordings to improve the model's robustness to real-world environments.
+2. **Spectrogram Conversion**:
+   Converts the raw audio into Mel-spectrograms for easier analysis by convolutional neural networks (CNNs).
 
+3. **Noise Augmentation**:
+   Adds background noise to training samples to enhance model robustness in real-world environments.
+
+### **Sample Preprocessing Code**
 ```python
 import tensorflow as tf
 import numpy as np
 import os
 
-# Load the Speech Commands dataset
-data_dir = 'path_to_speech_commands_dataset'
-
-# List of available commands
-commands = np.array(tf.io.gfile.listdir(str(data_dir)))
+# Load the dataset
+commands_dir = 'path_to_speech_commands_dataset'
+commands = np.array(tf.io.gfile.listdir(commands_dir))
 commands = commands[commands != '_background_noise_']
 
-print(f'Commands in the dataset: {commands}')
+print(f'Commands: {commands}')
 
-# Function to preprocess audio
+# Preprocess function
 def preprocess_audio(file_path):
     audio = tf.io.read_file(file_path)
     audio, _ = tf.audio.decode_wav(audio)
-    audio = tf.squeeze(audio, axis=-1)  # Remove extra dimension
-    audio = tf.signal.stft(audio, frame_length=255, frame_step=128)  # Short-time Fourier Transform
+    audio = tf.squeeze(audio, axis=-1)
+    audio = tf.signal.stft(audio, frame_length=255, frame_step=128)
     spectrogram = tf.abs(audio)
     return spectrogram
 
-# Example usage
-example_file = os.path.join(data_dir, 'yes', 'some_audio_file.wav')
+# Example Usage
+example_file = os.path.join(commands_dir, 'yes', 'sample_audio.wav')
 spectrogram = preprocess_audio(example_file)
-
-# Data augmentation using background noise
-def augment_with_noise(audio, noise):
-    return audio + noise * 0.1  # Add 10% of the noise volume to the original audio
 ```
 
-Tools for preprocessing audio datasets:
+---
 
-- [Librosa: Python Package for Audio Processing](https://librosa.org/doc/latest/index.html)
-- [TensorFlow Audio Preprocessing](https://www.tensorflow.org/tutorials/audio/simple_audio)
+## **Model Architecture**
 
-### 4. **Model Training**
-
-#### **Model Architecture**
-
-The chosen model is a **Convolutional Neural Network (CNN)**, which is well-suited for processing spectrograms of the speech data. CNNs can capture spatial patterns in audio, which helps the model distinguish between different command words.
+The system uses a Convolutional Neural Network (CNN), which excels in processing spectrograms. The architecture is designed to recognize spatial and temporal patterns in audio data.
 
 ![image](https://github.com/user-attachments/assets/0ac6f7f0-b644-43b4-81fb-59afec7c1462)
 
+### **Model Details**
 
 ```python
 from tensorflow.keras.models import Sequential
@@ -116,100 +104,97 @@ def create_cnn_model(input_shape):
         Flatten(),
         Dense(128, activation='relu'),
         Dropout(0.5),
-        Dense(35, activation='softmax')  # 35 output classes
+        Dense(35, activation='softmax')  # 35 classes for 35 words
     ])
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-input_shape = (64, 64, 1)  # Example input shape
+input_shape = (64, 64, 1)
 model = create_cnn_model(input_shape)
 model.summary()
 ```
 
-The network consists of several convolutional layers followed by max-pooling and dropout to prevent overfitting. The final dense layer outputs predictions for one of the 35 classes (words).
+### **Training Parameters**
+- **Optimizer**: Adam.
+- **Loss Function**: Categorical Crossentropy.
+- **Learning Rate**: 0.001.
+- **Batch Size**: 64.
+- **Epochs**: 30.
 
-#### **Training Hyperparameters**:
-- **Optimizer**: Adam (Adaptive Moment Estimation)
-- **Loss Function**: Categorical Crossentropy
-- **Learning Rate**: 0.001
-- **Batch Size**: 64
-- **Epochs**: 30
+---
 
-For more information on CNNs in audio processing:
-
-- [Convolutional Neural Networks for Audio Recognition](https://www.tensorflow.org/tutorials/audio/simple_audio)
-- [Deep Learning for Audio](https://www.analyticsvidhya.com/blog/2019/07/learn-build-first-speech-to-text-model-python/)
-
-### 5. **Results**
-
-#### **Accuracy & Loss**
-
-The model was trained for 5 epochs, and the accuracy on the test set was evaluated. Below are some key metrics:
-
-- **Validation Accuracy**: 85.65%
-- **Test Accuracy**: 86%
-- **Loss on Test Set**: 0.6290
-
-
-![Result](https://github.com/user-attachments/assets/0295705f-cba7-44a6-806f-0a7d32cb06f6)
-
-
-#### **Confusion Matrix**
-
-The confusion matrix provides insights into which command words are most often confused with others. For example, “No” and “Go” were occasionally misclassified due to their similar pronunciations.
+## **Results and Performance**
 
 <p float="left">
+ 
+### **Key Metrics**:
+- **Validation Accuracy**: 86%
+- **Test Accuracy**: 85.65%
+- **Loss on Test Set**: 0.629
 
-<img width="490" alt="image" src="https://github.com/user-attachments/assets/e9ddae1d-6829-4070-a573-c4734749a74d" >
-<img width="490" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" >
-
-
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/e9ddae1d-6829-4070-a573-c4734749a74d" >
 
 </p>
 
 
-#### **Visualizing the Training Progress**:
 
+### **Training Progress**:
 ```python
 import matplotlib.pyplot as plt
 
-# Plotting the accuracy and loss over epochs
+# Plot training history
 plt.figure(figsize=(12, 4))
 plt.subplot(1, 2, 1)
 plt.plot(history.history['accuracy'], label='Training Accuracy')
 plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
 plt.legend()
-plt.title('Accuracy over epochs')
+plt.title('Accuracy Over Epochs')
 
 plt.subplot(1, 2, 2)
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
-plt.title('Loss over epochs')
+plt.title('Loss Over Epochs')
 plt.show()
 ```
+
 
 <img width="1000" alt="image" src="https://github.com/user-attachments/assets/81907b17-abe8-4814-92a6-440ae8eeee17" />
 
 
+### **Confusion Matrix**
+The confusion matrix highlights which command words are frequently misclassified. For instance, words like “No” and “Go” were occasionally confused due to phonetic similarities.
 
-### 6. **Recording and Fine-Tuning**
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" ></p>
 
-To improve the model’s performance for specific users, custom recordings of command words were added to the dataset. 30 samples per word were recorded, and the model was fine-tuned. Techniques such as regularization and data augmentation helped prevent overfitting.
+---
 
-#### **Fine-Tuning Challenges**:
-- **Overfitting**: Mitigated by using dropout and data augmentation.
-- **Generalization**: Maintained by ensuring a balance between original dataset samples and personalized recordings.
+## **Fine-Tuning and Customization**
 
-### 7. **Conclusion**
+To improve performance for specific users, the model can be fine-tuned with additional recordings. Custom datasets (e.g., 30 samples per word) were used to:
 
-The project demonstrates a robust process for building a keyword recognition system using the Speech Commands Dataset. The CNN-based model achieved over 92% accuracy on the test set and performed well in noisy environments, thanks to noise augmentation techniques.
+- Enhance personalization.
+- Improve accuracy in specific environments.
 
-Future improvements could involve experimenting with more advanced architectures, such as recurrent neural networks (RNNs) or transformers, to further improve accuracy and robustness.
+### **Challenges and Solutions**:
+- **Overfitting**: Addressed using dropout and noise augmentation.
+- **Generalization**: Maintained by balancing original and custom data.
 
-#### **Additional Resources**:
-- TensorFlow Audio Recognition: [Link](https://www.tensorflow.org/tutorials/audio/simple_audio)
-- Detailed guide on keyword spotting: [Link](https://arxiv.org/pdf/1804.03209.pdf)
+---
+
+## **Future Improvements**
+
+1. Experimenting with advanced architectures such as recurrent neural networks (RNNs) or transformers.
+2. Deploying the model for real-time inference on mobile or edge devices.
+3. Enhancing noise augmentation techniques to improve performance in challenging environments.
+
+---
+
+## **Resources**
+
+- [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz)
+- [TensorFlow Audio Recognition Guide](https://www.tensorflow.org/tutorials/audio/simple_audio)
+- [Project Repository](https://github.com/yxshee/speech-command-recognition)
 
 ---
 
