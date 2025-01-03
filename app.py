@@ -16,6 +16,7 @@ st.set_page_config(
 )
 
 st.title("∿ Speech Command Recognition")
+st.image("https://media.giphy.com/media/9Q5fSHyPKfrr2/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g",width="400")
 st.markdown("""Upload an audio file, and the model will predict the spoken command.
 The app will display the waveform and spectrogram of the uploaded audio along with the prediction.
 """)
