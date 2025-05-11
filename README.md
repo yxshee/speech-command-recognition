@@ -13,7 +13,7 @@
 
 </p>
 
-# Speech Command Recognition Project
+# Speech Command Recognition 
 
 This project focuses on building a robust keyword recognition system using the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset consists of one-second audio files containing spoken English words, enabling the training of machine learning models for real-time keyword detection. The system aims to:
 
