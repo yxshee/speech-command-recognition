@@ -23,7 +23,7 @@ This project focuses on building a robust keyword recognition system using the [
 
 ---
 
-![demo](demo.webp)
+![demo](assets/demo.webp)
 
 ## **Dataset Description**
 
