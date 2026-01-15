@@ -23,6 +23,8 @@ This project focuses on building a robust keyword recognition system using the [
 
 ---
 
+![demo](demo.webp)
+
 ## **Dataset Description**
 
 The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of 105,829 audio samples, each containing a single spoken English word. The dataset is organized into 35 categories, including:

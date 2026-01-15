@@ -1,8 +1,5 @@
+streamlit
 tensorflow
 numpy
 matplotlib
-librosa == 0.10.1
-scikit-learn
-pandas
-jupyter
-ipython
+librosa==0.10.1
