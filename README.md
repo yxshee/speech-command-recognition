@@ -1,15 +1,15 @@
 
 <p float="left">
 
-<img width="190"  height="190"  src="https://media.giphy.com/media/9Q5fSHyPKfrr2/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<!-- <img width="190"  height="190"  src="https://media.giphy.com/media/9Q5fSHyPKfrr2/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g"> -->
 
-<img width="190"  height="190"  src="https://media.giphy.com/media/pViWHLiQBA1q0/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img width="33%"   src="https://media.giphy.com/media/pViWHLiQBA1q0/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
 
 <!-- <img   width="190" height="200" src="https://media.giphy.com/media/Qw4X3FwLj6EgczeQOuk/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g"> -->
 
-<img  width="190" height="190"  src="https://media.giphy.com/media/Bom9WWqrVVOAc5ANVE/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img  width="33%"  src="https://media.giphy.com/media/Bom9WWqrVVOAc5ANVE/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
 
-<img width="190"  height="190"  src="https://media.giphy.com/media/d2YVJ4m4aUrNwl44/giphy.gif?cid=ecf05e47h0tc9ft2twbxb8bg0iozgpu99t7ukzbfm13u9qly&ep=v1_gifs_related&rid=giphy.gif&ct=g">
+<img width="33%"  src="https://media.giphy.com/media/d2YVJ4m4aUrNwl44/giphy.gif?cid=ecf05e47h0tc9ft2twbxb8bg0iozgpu99t7ukzbfm13u9qly&ep=v1_gifs_related&rid=giphy.gif&ct=g">
 
 </p>
 
