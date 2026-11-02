@@ -1,6 +1,7 @@
 """Speech Command Recognition - Streamlit Application."""
 import io
 import warnings
+from pathlib import Path
 
 import librosa
 import matplotlib.pyplot as plt
@@ -13,17 +14,29 @@ warnings.filterwarnings("ignore")
 # Constants
 SAMPLE_RATE = 16000
 AUDIO_DURATION = 1.0
-SPECTROGRAM_FFT = 320
-SPECTROGRAM_HOP = 128
+STFT_FRAME_LENGTH = 255
+STFT_FRAME_STEP = 128
 FREQ_BINS = 161
 TIME_FRAMES = 101
+MODEL_PATH = Path(__file__).resolve().parent / "model" / "wavmodel.keras"
 
-COMMANDS = np.array([
-    'backward', 'bed', 'bird', 'cat', 'dog', 'down', 'eight', 'five', 'follow',
-    'forward', 'four', 'go', 'happy', 'house', 'learn', 'left', 'marvin',
-    'nine', 'no', 'off', 'on', 'one', 'right', 'seven', 'sheila', 'six', 'stop',
-    'three', 'tree', 'two', 'up', 'visual', 'wow', 'yes', 'zero'
+# The model's 41 outputs follow the order in which model/model.ipynb listed the
+# extracted dataset directory, including a few entries that are not words.
+# Index i of the model output is MODEL_LABELS[i], so this order must not change.
+MODEL_LABELS = np.array([
+    'learn', 'on', 'down', 'follow', 'cat', '.DS_Store', 'three', 'forward',
+    'up', 'no', 'sheila', 'stop', 'tree', 'zero', 'LICENSE', 'six', 'four',
+    'validation_list.txt', 'seven', 'one', 'right', 'off', 'marvin', 'five',
+    'dog', 'two', 'go', 'left', 'testing_list.txt', 'wow', 'bird', 'backward',
+    'house', 'visual', 'happy', 'nine', '_background_noise_',
+    'speech_commands_v0.02.tar.gz', 'eight', 'bed', 'yes',
 ])
+NON_WORD_LABELS = {
+    '.DS_Store', 'LICENSE', 'validation_list.txt', 'testing_list.txt',
+    '_background_noise_', 'speech_commands_v0.02.tar.gz',
+}
+WORD_MASK = np.array([label not in NON_WORD_LABELS for label in MODEL_LABELS])
+
 
 # Page configuration
 st.set_page_config(
@@ -36,7 +49,7 @@ st.set_page_config(
 @st.cache_resource
 def load_model():
     """Load the pre-trained TensorFlow model."""
-    return tf.keras.models.load_model('wavmodel.keras')
+    return tf.keras.models.load_model(MODEL_PATH)
 
 
 def preprocess_audio(audio_bytes: bytes) -> np.ndarray:
@@ -54,20 +67,27 @@ def preprocess_audio(audio_bytes: bytes) -> np.ndarray:
 
 
 def get_spectrogram(waveform: np.ndarray) -> np.ndarray:
-    """Generate and normalize a spectrogram from the audio waveform."""
-    spectrogram = np.abs(librosa.stft(waveform, n_fft=SPECTROGRAM_FFT, hop_length=SPECTROGRAM_HOP))
-    spectrogram_db = librosa.amplitude_to_db(spectrogram, ref=np.max)
-    spectrogram_db = librosa.util.fix_length(spectrogram_db, size=TIME_FRAMES, axis=1)
-    spectrogram_db = (spectrogram_db - np.mean(spectrogram_db)) / np.std(spectrogram_db)
-    return spectrogram_db[:FREQ_BINS, :, np.newaxis]
+    """Compute the model input exactly as model/model.ipynb did during training.
+
+    Magnitude STFT (frame 255, step 128) resized to 161x101, with no dB scaling
+    or normalization.
+    """
+    stft = tf.signal.stft(
+        tf.constant(waveform, dtype=tf.float32),
+        frame_length=STFT_FRAME_LENGTH,
+        frame_step=STFT_FRAME_STEP,
+    )
+    spectrogram = tf.abs(stft)[..., tf.newaxis]
+    return tf.image.resize(spectrogram, [FREQ_BINS, TIME_FRAMES]).numpy()
 
 
 def predict_command(spectrogram: np.ndarray, model) -> tuple:
-    """Predict the command from the spectrogram using the model."""
-    predictions = model.predict(spectrogram[np.newaxis, ...], verbose=0)
-    predicted_index = np.argmax(predictions[0])
-    confidence = tf.nn.softmax(predictions[0])[predicted_index].numpy()
-    return COMMANDS[predicted_index], confidence
+    """Predict the spoken word, ignoring outputs that are not words."""
+    logits = model.predict(spectrogram[np.newaxis, ...], verbose=0)[0]
+    logits = np.where(WORD_MASK, logits, -np.inf)
+    probabilities = tf.nn.softmax(logits).numpy()
+    predicted_index = int(np.argmax(probabilities))
+    return MODEL_LABELS[predicted_index], float(probabilities[predicted_index])
 
 
 def plot_waveform(waveform: np.ndarray) -> plt.Figure:
@@ -116,10 +136,10 @@ def main():
         
         # Process audio
         waveform = preprocess_audio(audio_bytes)
-        spectrogram_db = get_spectrogram(waveform)
+        spectrogram = get_spectrogram(waveform)
         
         # Predict
-        predicted_command, confidence = predict_command(spectrogram_db, model)
+        predicted_command, confidence = predict_command(spectrogram, model)
         
         # Display results
         col1, col2 = st.columns(2)
@@ -133,7 +153,7 @@ def main():
         st.pyplot(plot_waveform(waveform))
         
         st.markdown("#### Spectrogram")
-        st.pyplot(plot_spectrogram(spectrogram_db.squeeze(axis=-1)))
+        st.pyplot(plot_spectrogram(librosa.amplitude_to_db(spectrogram.squeeze(axis=-1), ref=np.max)))
 
 
 if __name__ == "__main__":
