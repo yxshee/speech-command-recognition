@@ -25,6 +25,26 @@ This project focuses on building a robust keyword recognition system using the [
 
 ![demo](assets/demo.webp)
 
+## **Quick Start**
+
+Try the trained model in a local web app. You need Python 3.10 or newer; the trained model (`model/wavmodel.keras`) is already in the repository.
+
+```bash
+git clone https://github.com/yxshee/speech-command-recognition.git
+cd speech-command-recognition
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Open http://localhost:8501 and upload a WAV clip of one spoken word. To try it right away, upload one of the samples in [`assets/samples/`](assets/samples) (`yes.wav`, `stop.wav`, `left.wav`). The app shows the predicted word with its confidence, plus the waveform and spectrogram. Clips longer than one second are trimmed to the first second.
+
+<img src="assets/app-screenshot.png" alt="The app predicting YES for assets/samples/yes.wav" width="600">
+
+The model recognises the 35 words of the dataset: backward, bed, bird, cat, dog, down, eight, five, follow, forward, four, go, happy, house, learn, left, marvin, nine, no, off, on, one, right, seven, sheila, six, stop, three, tree, two, up, visual, wow, yes, zero.
+
+To retrain the model, open [`model/model.ipynb`](model/model.ipynb) and point it at the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz).
+
 ## **Dataset Description**
 
 The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of 105,829 audio samples, each containing a single spoken English word. The dataset is organized into 35 categories, including:
