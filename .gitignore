@@ -1,0 +1,7 @@
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+data/
+*.tar.gz
+results/best.weights.h5
