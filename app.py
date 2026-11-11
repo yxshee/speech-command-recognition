@@ -1,13 +1,12 @@
 """Speech Command Recognition - Streamlit application."""
 import warnings
 
-import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
 from speech_commands.audio import SAMPLE_RATE, AudioDecodeError, load_clip
-from speech_commands.features import spectrogram
+from speech_commands.features import log_mel_spectrogram
 from speech_commands.inference import load_model, predict
 
 warnings.filterwarnings("ignore")
@@ -38,14 +37,14 @@ def plot_waveform(waveform: np.ndarray) -> plt.Figure:
     return fig
 
 
-def plot_spectrogram(spectrogram_db: np.ndarray) -> plt.Figure:
-    """Plot the spectrogram of the audio. Input is [time, frequency]."""
+def plot_spectrogram(log_mel: np.ndarray) -> plt.Figure:
+    """Plot the log-mel spectrogram the model sees. Input is [time, mel band]."""
     fig, ax = plt.subplots(figsize=(10, 3))
-    img = ax.imshow(spectrogram_db.T, aspect='auto', origin='lower', cmap='magma')
-    ax.set_xlabel("Time Frames")
-    ax.set_ylabel("Frequency Bins")
-    ax.set_title("Spectrogram (dB)")
-    fig.colorbar(img, ax=ax, format="%+2.f dB")
+    img = ax.imshow(log_mel.T, aspect='auto', origin='lower', cmap='magma')
+    ax.set_xlabel("Time frame (10 ms each)")
+    ax.set_ylabel("Mel band")
+    ax.set_title("Log-mel spectrogram")
+    fig.colorbar(img, ax=ax, label="log energy")
     plt.tight_layout()
     return fig
 
@@ -74,7 +73,7 @@ def main():
         except AudioDecodeError as error:
             st.error(f"{error} Please upload a WAV recording of one spoken word.")
             return
-        features = spectrogram(waveform)
+        features = log_mel_spectrogram(waveform).numpy()
         prediction = predict(model, features)
 
         col1, col2 = st.columns(2)
@@ -89,7 +88,7 @@ def main():
         plt.close(figure)
 
         st.markdown("#### Spectrogram")
-        figure = plot_spectrogram(librosa.amplitude_to_db(features.squeeze(axis=-1), ref=np.max))
+        figure = plot_spectrogram(features[..., 0])
         st.pyplot(figure)
         plt.close(figure)
 

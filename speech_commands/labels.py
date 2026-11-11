@@ -1,25 +1,14 @@
-"""Class labels of the committed model.
+"""The 35 words of Speech Commands v0.02, in the order of the model's outputs.
 
-The model in model/wavmodel.keras has 41 outputs. They follow the order in
-which the training notebook listed the extracted dataset directory, which
-included six entries that are not words. Index i of the model output is
-MODEL_LABELS[i], so this order must not change while that model is in use.
+Index i of the model output is WORDS[i]. The order is alphabetical, which is
+also the sorted order of the dataset's word directories; scripts/train.py
+refuses to run if the dataset on disk does not match this list.
 """
-import numpy as np
 
-MODEL_LABELS = np.array([
-    'learn', 'on', 'down', 'follow', 'cat', '.DS_Store', 'three', 'forward',
-    'up', 'no', 'sheila', 'stop', 'tree', 'zero', 'LICENSE', 'six', 'four',
-    'validation_list.txt', 'seven', 'one', 'right', 'off', 'marvin', 'five',
-    'dog', 'two', 'go', 'left', 'testing_list.txt', 'wow', 'bird', 'backward',
-    'house', 'visual', 'happy', 'nine', '_background_noise_',
-    'speech_commands_v0.02.tar.gz', 'eight', 'bed', 'yes',
-])
-NON_WORD_LABELS = frozenset({
-    '.DS_Store', 'LICENSE', 'validation_list.txt', 'testing_list.txt',
-    '_background_noise_', 'speech_commands_v0.02.tar.gz',
-})
-WORD_MASK = np.array([label not in NON_WORD_LABELS for label in MODEL_LABELS])
-
-# The 35 words the model can recognise, in alphabetical order.
-WORDS = tuple(sorted(str(label) for label in MODEL_LABELS[WORD_MASK]))
+WORDS = (
+    'backward', 'bed', 'bird', 'cat', 'dog', 'down', 'eight', 'five',
+    'follow', 'forward', 'four', 'go', 'happy', 'house', 'learn', 'left',
+    'marvin', 'nine', 'no', 'off', 'on', 'one', 'right', 'seven', 'sheila',
+    'six', 'stop', 'three', 'tree', 'two', 'up', 'visual', 'wow', 'yes',
+    'zero',
+)
