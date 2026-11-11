@@ -1,223 +1,112 @@
+# Speech Command Recognition
 
-<p float="left">
+A small convolutional network that recognises 35 spoken English words from one-second audio clips. It is trained on Google's Speech Commands v0.02 dataset and reaches **94.7% accuracy on the dataset's official test list**: 11,005 clips from speakers the model never heard during training.
 
-<!-- <img width="190"  height="190"  src="https://media.giphy.com/media/9Q5fSHyPKfrr2/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g"> -->
+**[Try the live demo](https://librosaiscool.streamlit.app)**: click a sample, record a word with your microphone, or upload a WAV file. The free host puts the app to sleep when it is idle; if you see a wake-up button, press it and give it a minute.
 
-<img width="29%"   src="https://media.giphy.com/media/pViWHLiQBA1q0/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
-
-<!-- <img   width="190" height="200" src="https://media.giphy.com/media/Qw4X3FwLj6EgczeQOuk/giphy.gif?cid=ecf05e471w059g8j66r5ndmpksg5h4dhb8p1v2i52dxenuuz&ep=v1_gifs_related&rid=giphy.gif&ct=g">  -->
-
-<img  width="29%"  src="https://media.giphy.com/media/Bom9WWqrVVOAc5ANVE/giphy.gif?cid=ecf05e47qr0xp3f59aue8ckfchtvw3uxdayo3vb5pzqj99nh&ep=v1_gifs_related&rid=giphy.gif&ct=g">
-
-<img width="29%"  src="https://media.giphy.com/media/d2YVJ4m4aUrNwl44/giphy.gif?cid=ecf05e47h0tc9ft2twbxb8bg0iozgpu99t7ukzbfm13u9qly&ep=v1_gifs_related&rid=giphy.gif&ct=g">
-
+<p align="center">
+  <img src="assets/app-screenshot.png" alt="The demo app after clicking the 'yes' sample: the predicted word, its confidence, the top three guesses, the waveform and the log-mel spectrogram" width="760"/>
 </p>
 
-# Speech Command Recognition 
+## Results
 
-This project focuses on building a robust keyword recognition system using the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz). The dataset consists of one-second audio files containing spoken English words, enabling the training of machine learning models for real-time keyword detection. The system aims to:
+| | |
+|---|---|
+| Test accuracy | **94.7%** |
+| Macro F1 | 0.942 |
+| Test clips | 11,005 (official `testing_list.txt`) |
+| Classes | 35 words |
+| Model size | 245,831 parameters, 1,031 KB on disk |
 
-- Accurately recognize command words from short audio clips.
-- Perform robustly in noisy environments.
-- Be customizable with additional user-specific data for fine-tuning.
+<p align="center">
+  <img src="results/confusion_matrix.png" alt="Confusion matrix of the 35 words on the official test list" width="640"/>
+</p>
 
----
+The words the model mixes up most often:
 
-![demo](assets/demo.webp)
+- "tree" heard as "three": 21 clips
+- "forward" heard as "four": 17 clips
+- "off" heard as "up": 15 clips
+- "go" heard as "no": 13 clips
+- "two" heard as "go": 12 clips
 
-## **Quick Start**
+Precision, recall and F1 for every word are in [results/per_class.md](results/per_class.md). Nothing in this section is typed by hand: `scripts/evaluate.py` writes `results/metrics.json`, the per-class table and the confusion matrix, and the numbers above are copied from that file.
 
-Try the trained model in a local web app. You need Python 3.10 or newer; the trained model (`model/wavmodel.keras`) is already in the repository.
+## Quick start
+
+Python 3.12.
 
 ```bash
 git clone https://github.com/yxshee/speech-command-recognition.git
 cd speech-command-recognition
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Open http://localhost:8501 and upload a WAV clip of one spoken word. To try it right away, upload one of the samples in [`assets/samples/`](assets/samples) (`yes.wav`, `stop.wav`, `left.wav`). The app shows the predicted word with its confidence, plus the waveform and spectrogram. Clips longer than one second are trimmed to the first second.
+Open http://localhost:8501 and click one of the sample buttons, or record a word. The trained model (`model/wavmodel.keras`) is in the repository, so nothing needs to be downloaded or trained to try it.
 
-<img src="assets/app-screenshot.png" alt="The app predicting YES for assets/samples/yes.wav" width="600">
+The 35 words: backward, bed, bird, cat, dog, down, eight, five, follow, forward, four, go, happy, house, learn, left, marvin, nine, no, off, on, one, right, seven, sheila, six, stop, three, tree, two, up, visual, wow, yes, zero.
 
-The model recognises the 35 words of the dataset: backward, bed, bird, cat, dog, down, eight, five, follow, forward, four, go, happy, house, learn, left, marvin, nine, no, off, on, one, right, seven, sheila, six, stop, three, tree, two, up, visual, wow, yes, zero.
+## How it works
 
-To retrain the model, open [`model/model.ipynb`](model/model.ipynb) and point it at the [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz).
+1. **Audio in.** Any clip is decoded to mono, resampled to 16 kHz, and cut or zero-padded to exactly one second (`speech_commands/audio.py`).
+2. **Features.** A log-mel spectrogram: 25 ms windows every 10 ms, 40 mel bands between 20 Hz and 7.6 kHz, which gives a 98 × 40 array (`speech_commands/features.py`). Training, evaluation and the app all call this one function, so the network always sees audio prepared the same way.
+3. **Model.** Four convolution blocks (32, 64, 128 and 128 filters, each with batch normalisation and ReLU), global average pooling, dropout, and a 35-way output layer (`scripts/train.py`).
+4. **Answer.** A softmax over the 35 outputs. The app shows the best word, its probability and the next two guesses.
 
-## **Dataset Description**
+## Training
 
-The [Speech Commands Dataset](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz) is a collection of 105,829 audio samples, each containing a single spoken English word. The dataset is organized into 35 categories, including:
-
-- **Core Commands**: Yes, No, Up, Down, Left, Right, On, Off, Stop, Go.
-- **Auxiliary Words**: Cat, Dog, Bird, Tree.
-- **Noise Samples**: Background noise (white noise, pink noise, running water, etc.).
-
-### **Key Features of the Dataset**:
-- **Diversity**: Contains recordings from speakers with varied ages, genders, and accents.
-- **Partitioning**:
-  - **Training Data**: 80% of the dataset.
-  - **Validation Data**: 10%.
-  - **Test Data**: 10%.
-
----
-
-## **Preprocessing**
-
-To prepare the audio data for machine learning, several preprocessing steps are applied:
-
-1. **Audio Normalization**:
-   Ensures uniform loudness across recordings.
-
-2. **Spectrogram Conversion**:
-   Converts the raw audio into Mel-spectrograms for easier analysis by convolutional neural networks (CNNs).
-
-3. **Noise Augmentation**:
-   Adds background noise to training samples to enhance model robustness in real-world environments.
-
-### **Sample Preprocessing Code**
-```python
-import tensorflow as tf
-import numpy as np
-import os
-
-# Load the dataset
-commands_dir = 'path_to_speech_commands_dataset'
-commands = np.array(tf.io.gfile.listdir(commands_dir))
-commands = commands[commands != '_background_noise_']
-
-print(f'Commands: {commands}')
-
-# Preprocess function
-def preprocess_audio(file_path):
-    audio = tf.io.read_file(file_path)
-    audio, _ = tf.audio.decode_wav(audio)
-    audio = tf.squeeze(audio, axis=-1)
-    audio = tf.signal.stft(audio, frame_length=255, frame_step=128)
-    spectrogram = tf.abs(audio)
-    return spectrogram
-
-# Example Usage
-example_file = os.path.join(commands_dir, 'yes', 'sample_audio.wav')
-spectrogram = preprocess_audio(example_file)
+```bash
+python scripts/train.py --download   # fetches Speech Commands v0.02, about 2.4 GB
+python scripts/evaluate.py           # writes results/
 ```
 
----
+- **Data split.** The dataset's own `validation_list.txt` and `testing_list.txt` decide what is held out: 84,843 training, 9,981 validation and 11,005 test clips. Those lists keep each speaker in one split only, so the test score measures new voices, not memorised ones.
+- **Augmentation**, on training clips only: a random shift of up to 100 ms, and, four times out of five, a random second of the dataset's background-noise recordings mixed in.
+- **Optimisation.** Adam, learning rate 0.001 halved when validation loss stalls, batch size 128, early stopping. The weights from the epoch with the best validation accuracy are the ones saved (epoch 28 of 30, 95.3% validation accuracy).
 
-## **Model Architecture**
+The committed model was trained on a Kaggle GPU. The training curves are in `results/training_history.json`.
 
-The system uses a Convolutional Neural Network (CNN), which excels in processing spectrograms. The architecture is designed to recognize spatial and temporal patterns in audio data.
+## Limitations
 
-![image](https://github.com/user-attachments/assets/0ac6f7f0-b644-43b4-81fb-59afec7c1462)
+- **It always answers with one of the 35 words.** There is no "silence" or "unknown word" class, so noise, silence and other words still get an answer. The app flags predictions below 50% confidence, which helps but is not a real rejection mechanism.
+- **Only the first second is used.** A word that starts late or runs long is cut off.
+- **The test set comes from the same collection as the training set**: short clips recorded by volunteers on their own devices. Accuracy on far-field microphones, heavy noise, children's voices or accents that are rare in the dataset has not been measured and is likely to be lower.
+- **It was trained on human voices.** A synthesised "stop" tried during development was heard as "four".
+- **English only.**
 
-### **Model Details**
+## Project layout
 
-```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+| Path | Contents |
+|---|---|
+| `app.py` | The Streamlit demo |
+| `speech_commands/audio.py` | Decoding, resampling, padding to one second |
+| `speech_commands/features.py` | The log-mel spectrogram |
+| `speech_commands/labels.py` | The 35 words, in model-output order |
+| `speech_commands/inference.py` | Loading the model, softmax, top-three prediction |
+| `speech_commands/dataset.py` | Download and the official train / validation / test split |
+| `scripts/train.py`, `scripts/evaluate.py` | Training and evaluation |
+| `model/wavmodel.keras` | The trained model |
+| `results/` | Metrics, per-class table, confusion matrix, training curves |
+| `tests/` | Tests for audio handling, features, the split, inference and the app |
+| `assets/samples/` | Three clips from the official test list, used by the demo's sample buttons and by the tests |
 
-def create_cnn_model(input_shape):
-    model = Sequential([
-        Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
-        MaxPooling2D(2, 2),
-        Conv2D(64, (3, 3), activation='relu'),
-        MaxPooling2D(2, 2),
-        Flatten(),
-        Dense(128, activation='relu'),
-        Dropout(0.5),
-        Dense(35, activation='softmax')  # 35 classes for 35 words
-    ])
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    return model
+## Tests
 
-input_shape = (64, 64, 1)
-model = create_cnn_model(input_shape)
-model.summary()
+```bash
+pip install -r requirements-dev.txt
+pytest -q
 ```
 
-<img width="1397" alt="image" src="https://github.com/user-attachments/assets/a595225f-4574-4bb4-8bfc-2fd524a48efb" />
+The tests cover audio decoding (sample rates, stereo, corrupt files), the feature function, the data split (on a synthetic directory, no download needed), the prediction code, the committed model's answers for the three sample clips, and the app itself through Streamlit's test harness. They run on every push in [GitHub Actions](.github/workflows/tests.yml).
 
+## A note on earlier numbers
 
-### **Training Parameters**
-- **Optimizer**: Adam.
-- **Loss Function**: Categorical Crossentropy.
-- **Learning Rate**: 0.001.
-- **Batch Size**: 64.
-- **Epochs**: 30.
+An earlier version of this README reported 85.65% test accuracy. That figure came from a notebook that split the files at random, so the same speakers appeared in training and test data, and whose model had six output classes that were not words. It could not be reproduced from the repository. The model was retrained from scratch with the pipeline described above, and the old notebook was removed; it remains in the git history.
 
----
+## Dataset and licence
 
-## **Results and Performance**
+Speech Commands v0.02 is by Pete Warden (Google) and is released under the Creative Commons BY 4.0 licence: Warden, P. (2018). *Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition*. arXiv:1804.03209. See [dataset/dataset.md](dataset/dataset.md).
 
-<p float="left">
- 
-### **Key Metrics**:
-- **Validation Accuracy**: 86%
-- **Test Accuracy**: 85.65%
-- **Loss on Test Set**: 0.629
-
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/e9ddae1d-6829-4070-a573-c4734749a74d" >
-
-</p>
-
-
-
-### **Training Progress**:
-```python
-import matplotlib.pyplot as plt
-
-# Plot training history
-plt.figure(figsize=(12, 4))
-plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.legend()
-plt.title('Accuracy Over Epochs')
-
-plt.subplot(1, 2, 2)
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.legend()
-plt.title('Loss Over Epochs')
-plt.show()
-```
-
-
-<img width="1000" alt="image" src="https://github.com/user-attachments/assets/81907b17-abe8-4814-92a6-440ae8eeee17" />
-
-
-### **Confusion Matrix**
-The confusion matrix highlights which command words are frequently misclassified. For instance, words like “No” and “Go” were occasionally confused due to phonetic similarities.
-
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/9de2207e-3e7d-425b-a944-10bb7218055a" ></p>
-
----
-
-## **Fine-Tuning and Customization**
-
-To improve performance for specific users, the model can be fine-tuned with additional recordings. Custom datasets (e.g., 30 samples per word) were used to:
-
-- Enhance personalization.
-- Improve accuracy in specific environments.
-
-### **Challenges and Solutions**:
-- **Overfitting**: Addressed using dropout and noise augmentation.
-- **Generalization**: Maintained by balancing original and custom data.
-
----
-
-## **Future Improvements**
-
-1. Experimenting with advanced architectures such as recurrent neural networks (RNNs) or transformers.
-2. Deploying the model for real-time inference on mobile or edge devices.
-3. Enhancing noise augmentation techniques to improve performance in challenging environments.
-
----
-
-## **Resources**
-
-- [Speech Commands Dataset v2](http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz)
-- [TensorFlow Audio Recognition Guide](https://www.tensorflow.org/tutorials/audio/simple_audio)
-- [Project Repository](https://github.com/yxshee/speech-command-recognition)
-
----
+This repository is licensed under CC BY 4.0. See [LICENSE](LICENSE).
